@@ -18,4 +18,19 @@ router.get('/room-bookings/:roomId', (req, res) => {
   res.status(200).json({ messege: `Все брони номера ${req.params.roomId}` })
 })
 
+router.post('/auth/register', (req, res) => {
+  res.status(201).json({ messege: 'Зарегистрирован' })
+})
+router.post('/auth/login', (req, res) => {
+  res.status(200).json({ messege: 'Вход' })
+})
+router.post('/auth/logout', (req, res) => {
+  res.status(200).json({ messege: 'Выход' })
+})
+router.post('/room-bookings/:roomId', (req, res) => {
+  res.status(200).json({
+    messege: `Бронирвоние номера ${req.params.roomId}`
+  })
+})
+
 module.exports = router
