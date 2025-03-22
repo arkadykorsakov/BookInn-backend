@@ -29,7 +29,19 @@ router.post('/auth/logout', (req, res) => {
 })
 router.post('/room-bookings/:roomId', (req, res) => {
   res.status(200).json({
-    messege: `Бронирвоние номера ${req.params.roomId}`
+    messege: `Бронирование номера ${req.params.roomId}`
+  })
+})
+
+router.patch('/room-bookings/:id/status', (req, res) => {
+  res.status(200).json({
+    messege: `Изменение статуса бронирования ${req.params.id}`
+  })
+})
+
+router.put('/room-bookings/:id', (req, res) => {
+  res.status(200).json({
+    messege: `Изменение в бронировании ${req.params.id}`
   })
 })
 
