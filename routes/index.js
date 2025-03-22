@@ -14,3 +14,7 @@ router.post('/room-bookings/:id', (req, res) => {})
 
 router.put('/room-bookings/:id ', (req, res) => {})
 router.patch('/room-bookings/:id/status', (req, res) => {})
+
+router.delete('/room-bookings/:id ', (req, res) => {})
+
+module.exports = router
