@@ -11,3 +11,6 @@ router.get('/room-bookings/:id', (req, res) => {})
 router.post('/auth/register', (req, res) => {})
 router.post('/auth/login', (req, res) => {})
 router.post('/room-bookings/:id', (req, res) => {})
+
+router.put('/room-bookings/:id ', (req, res) => {})
+router.patch('/room-bookings/:id/status', (req, res) => {})
