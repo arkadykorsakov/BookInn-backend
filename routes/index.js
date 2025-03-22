@@ -38,10 +38,15 @@ router.patch('/room-bookings/:id/status', (req, res) => {
     messege: `Изменение статуса бронирования ${req.params.id}`
   })
 })
-
 router.put('/room-bookings/:id', (req, res) => {
   res.status(200).json({
     messege: `Изменение в бронировании ${req.params.id}`
+  })
+})
+
+router.delete('/room-bookings/:id', (req, res) => {
+  res.status(200).json({
+    message: `Удаление бронирования ${req.params.id}`
   })
 })
 
