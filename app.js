@@ -2,6 +2,7 @@ const express = require('express')
 const mongoose = require('mongoose')
 const routes = require('./routes')
 const cookieParser = require('cookie-parser')
+const initDatabase = require('./startUp/initDatabase')
 require('dotenv').config()
 
 const app = express()
@@ -13,11 +14,17 @@ app.use(express.json())
 
 app.use('/api', routes)
 
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    app.listen(PORT, () => {
-      console.log(`http://localhost:${PORT}/`)
+async function start() {
+  try {
+    mongoose.connection.once('open', () => {
+      initDatabase()
     })
-  })
-  .catch((err) => console.log(err))
+    await mongoose.connect(MONGO_URI)
+    app.listen(PORT, () => console.log(`http://localhost:${PORT}/`))
+  } catch (e) {
+    console.log(e.message)
+    process.exit(1)
+  }
+}
+
+start()
