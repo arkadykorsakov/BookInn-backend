@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt')
 const User = require('../models/User')
-const generateToken = require('../helpers/generateToken')
+const { generateToken } = require('../helpers/tokens')
 
 function findUserByEmail(email) {
   return User.findOne({ email })

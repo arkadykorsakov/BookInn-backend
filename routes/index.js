@@ -16,6 +16,39 @@ const { register, login } = require('../controllers/user')
 
 const router = express.Router({ mergeParams: true })
 
+router.post('/auth/register', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+    const user = await register({ email, password })
+    res.status(201).json({ user: mapUser(user), error: null })
+  } catch (e) {
+    const statusCode = e.status || 500
+    res.status(statusCode).json({ error: e.message || 'Internal Server Error' })
+  }
+})
+router.post('/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+
+    const { user, token } = await login({ email, password })
+
+    res.cookie('token', token, {
+      httpOnly: true
+    })
+
+    res.status(200).json({ user: mapUser(user), error: null })
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Internal Server Error' })
+  }
+})
+
 router.get('/rooms', async (req, res) => {
   try {
     const rooms = await getRooms()
@@ -88,38 +121,6 @@ router.get('/room-bookings/:roomId', async (req, res) => {
   }
 })
 
-router.post('/auth/register', async (req, res) => {
-  try {
-    const { email, password } = req.body
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' })
-    }
-    const user = await register({ email, password })
-    res.status(201).json({ user: mapUser(user), error: null })
-  } catch (e) {
-    const statusCode = e.status || 500
-    res.status(statusCode).json({ error: e.message || 'Internal Server Error' })
-  }
-})
-router.post('/auth/login', async (req, res) => {
-  try {
-    const { email, password } = req.body
-
-    if (!email || !password) {
-      return res.status(400).json({ error: 'Email and password are required' })
-    }
-
-    const { user, token } = await login({ email, password })
-
-    res.cookie('token', token, {
-      httpOnly: true
-    })
-
-    res.status(200).json({ user: mapUser(user), error: null })
-  } catch (e) {
-    res.status(500).json({ error: e.message || 'Internal Server Error' })
-  }
-})
 router.post('/auth/logout', (req, res) => {
   try {
     res.cookie('token', '', {
