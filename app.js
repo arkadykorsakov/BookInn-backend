@@ -16,9 +16,9 @@ app.use('/api', routes)
 
 async function start() {
   try {
-    mongoose.connection.once('open', () => {
-      initDatabase()
-    })
+    //  mongoose.connection.once('open', () => {
+    //    initDatabase()
+    //  })
     await mongoose.connect(MONGO_URI)
     app.listen(PORT, () => console.log(`http://localhost:${PORT}/`))
   } catch (e) {

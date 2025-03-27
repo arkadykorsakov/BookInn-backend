@@ -4,6 +4,7 @@ const statuses = require('../constants/statuses')
 
 async function getRooms() {
   const rooms = await Room.find()
+
   const today = new Date()
 
   return await Promise.all(
@@ -23,8 +24,10 @@ async function getRooms() {
     })
   )
 }
+
 async function getFreeRooms() {
   const roomsWithStatus = await getRooms()
+
   return roomsWithStatus.filter((room) => !room.isBooked)
 }
 

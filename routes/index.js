@@ -1,9 +1,5 @@
 const express = require('express')
-const {
-  getRooms,
-  getRoomById,
-  getFreeRooms
-} = require('../controllers/room.controller')
+const { getRooms, getRoomById, getFreeRooms } = require('../controllers/room')
 const {
   addRoomBooking,
   deleteRoomBooking,
@@ -11,10 +7,12 @@ const {
   getRoomBookingById,
   getRoomBookingsByRoomId,
   getCurrentBookingsForUser
-} = require('../controllers/roomBooking.controller')
+} = require('../controllers/roomBooking')
 const mapRoom = require('../helpers/mapRoom')
 const mapRoomBooking = require('../helpers/mapRoomBooking')
 const statuses = require('../constants/statuses')
+const mapUser = require('../helpers/mapUser')
+const { register, login } = require('../controllers/user')
 
 const router = express.Router({ mergeParams: true })
 
@@ -90,14 +88,46 @@ router.get('/room-bookings/:roomId', async (req, res) => {
   }
 })
 
-router.post('/auth/register', (req, res) => {
-  res.status(201).json({ message: 'Зарегистрирован' })
+router.post('/auth/register', async (req, res) => {
+  try {
+    const { email, password } = req.body
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+    const user = await register({ email, password })
+    res.status(201).json({ user: mapUser(user), error: null })
+  } catch (e) {
+    const statusCode = e.status || 500
+    res.status(statusCode).json({ error: e.message || 'Internal Server Error' })
+  }
 })
-router.post('/auth/login', (req, res) => {
-  res.status(200).json({ message: 'Вход' })
+router.post('/auth/login', async (req, res) => {
+  try {
+    const { email, password } = req.body
+
+    if (!email || !password) {
+      return res.status(400).json({ error: 'Email and password are required' })
+    }
+
+    const { user, token } = await login({ email, password })
+
+    res.cookie('token', token, {
+      httpOnly: true
+    })
+
+    res.status(200).json({ user: mapUser(user), error: null })
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Internal Server Error' })
+  }
 })
 router.post('/auth/logout', (req, res) => {
-  res.status(200).json({ message: 'Выход' })
+  try {
+    res.cookie('token', '', {
+      httpOnly: true
+    })
+  } catch (e) {
+    res.status(500).json({ error: e.message || 'Internal Server Error' })
+  }
 })
 router.post('/room-bookings/:roomId', async (req, res) => {
   try {
