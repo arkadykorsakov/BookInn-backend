@@ -3,12 +3,19 @@ const mongoose = require('mongoose')
 const routes = require('./routes')
 const cookieParser = require('cookie-parser')
 const initDatabase = require('./startUp/initDatabase')
+const cors = require('cors')
 require('dotenv').config()
 
 const app = express()
 const PORT = process.env.PORT || 3000
 const MONGO_URI = process.env.MONGO_URI
 
+app.use(
+  cors({
+    origin: 'http://localhost:3000',
+    credentials: true
+  })
+)
 app.use(cookieParser())
 app.use(express.json())
 

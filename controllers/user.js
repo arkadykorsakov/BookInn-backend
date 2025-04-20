@@ -21,7 +21,7 @@ async function login({ email, password }) {
   const user = await findUserByEmail(email)
   if (!user) {
     const error = new Error('User not found')
-    error.status = 404
+    error.status = 400
     throw error
   }
 

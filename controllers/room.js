@@ -1,33 +1,31 @@
 const Room = require('../models/Room')
-const RoomBooking = require('../models/RoomBooking')
+const RoomBooking = require('../models/Booking')
 const statuses = require('../constants/statuses')
 
 async function getRooms() {
-  const rooms = await Room.find()
-
+  const rooms = await Room.find().lean()
   const today = new Date()
 
-  return await Promise.all(
-    rooms.map(async (room) => {
-      const roomBooking = await RoomBooking.findOne({
-        room: room._id,
-        status: statuses.BOOKED,
-        startDate: { $lte: today },
-        endDate: { $gte: today }
-      })
+  const roomBookings = await RoomBooking.find({
+    room: { $in: rooms.map((room) => room._id) },
+    status: statuses.BOOKED,
+    startDate: { $lte: today },
+    endDate: { $gte: today }
+  }).select('room')
 
-      return {
-        id: room._id,
-        ...room.toObject(),
-        isBooked: !!roomBooking
-      }
-    })
+  const bookedRoomsSet = new Set(
+    roomBookings.map((booking) => booking.room.toString())
   )
+
+  return rooms.map((room) => ({
+    id: room._id,
+    ...room,
+    isBooked: bookedRoomsSet.has(room._id.toString())
+  }))
 }
 
-async function getFreeRooms() {
+async function getEmptyRooms() {
   const roomsWithStatus = await getRooms()
-
   return roomsWithStatus.filter((room) => !room.isBooked)
 }
 
@@ -38,5 +36,5 @@ async function getRoomById(id) {
 module.exports = {
   getRooms,
   getRoomById,
-  getFreeRooms
+  getEmptyRooms
 }

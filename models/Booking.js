@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
 const statuses = require('../constants/statuses')
 
-const RoomBookingSchema = mongoose.Schema(
+const BookingSchema = mongoose.Schema(
   {
     room: {
       type: mongoose.Schema.Types.ObjectId,
@@ -31,6 +31,6 @@ const RoomBookingSchema = mongoose.Schema(
   }
 )
 
-const RoomBooking = mongoose.model('RoomBooking', RoomBookingSchema)
+const Booking = mongoose.model('Booking', BookingSchema)
 
-module.exports = RoomBooking
+module.exports = Booking

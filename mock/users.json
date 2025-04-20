@@ -1,11 +1,11 @@
 [
   {
     "email": "admin@mail.ru",
-    "password": "$2y$10$pfXyeUrHztPXGz5/zhF9JuxDE1sPnVatjPEkYAxpKl/3ji9EaURHy",
+    "password": "12345",
     "role": 1
   },
   {
     "email": "user@mail.ru",
-    "password": "$2y$10$pfXyeUrHztPXGz5/zhF9JuxDE1sPnVatjPEkYAxpKl/3ji9EaURHy"
+    "password": "12345"
   }
 ]
